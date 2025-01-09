@@ -7,21 +7,21 @@ from common.log import logger
 from plugins import *
 
 @plugins.register(
-    name="CaloriesAndCurrencyInfo",
+    name="CaloriesAndCurrencyInfo",  # 修改为新的插件名称
     desire_priority=100,
     hidden=False,
     desc="A plugin to fetch calorie information and currency conversion",
     version="0.2",
     author="Your Name",
 )
-class CaloriesAndCurrencyPlugin(Plugin):
+class CaloriesAndCurrencyInfoPlugin(Plugin):
     def __init__(self):
         super().__init__()
         try:
             self.handlers[Event.ON_HANDLE_CONTEXT] = self.on_handle_context
-            logger.info("[CaloriesAndCurrencyPlugin] Initialized.")
+            logger.info("[CaloriesAndCurrencyInfoPlugin] Initialized.")
         except Exception as e:
-            logger.warn("[CaloriesAndCurrencyPlugin] Initialization failed.")
+            logger.warn("[CaloriesAndCurrencyInfoPlugin] Initialization failed.")
             raise e
 
     def on_handle_context(self, e_context):
@@ -127,8 +127,8 @@ class CaloriesAndCurrencyPlugin(Plugin):
             return None
 
     def get_currency_conversion(self, amount, source_currency, target_currency):
-        # 使用已提供的 API URL
-        api_url = f"https://v6.exchangerate-api.com/v6/a38630efad4f507c02fb2825/latest/{source_currency}"
+        # 使用已提供的 API URL，源货币和目标货币使用正确的符号（如 CNY 代替 人民币）
+        api_url = f"https://v6.exchangerate-api.com/v6/a38630efad4f507c02fb2825/latest/{source_currency.upper()}"
         try:
             response = requests.get(api_url)
             response.raise_for_status()
@@ -136,8 +136,8 @@ class CaloriesAndCurrencyPlugin(Plugin):
 
             if data.get("result") == "success":
                 rates = data.get("conversion_rates", {})
-                if target_currency in rates:
-                    return amount * rates[target_currency]
+                if target_currency.upper() in rates:
+                    return amount * rates[target_currency.upper()]
                 else:
                     logger.error(f"Unsupported target currency: {target_currency}")
                     return None
@@ -151,5 +151,5 @@ class CaloriesAndCurrencyPlugin(Plugin):
 
 # 示例调用
 if __name__ == "__main__":
-    plugin = CaloriesAndCurrencyPlugin()
+    plugin = CaloriesAndCurrencyInfoPlugin()  # 插件名保持为 CaloriesAndCurrencyInfoPlugin
     print(plugin.get_help_text())
