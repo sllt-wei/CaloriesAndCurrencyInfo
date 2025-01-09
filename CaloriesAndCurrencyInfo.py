@@ -100,7 +100,7 @@ class CaloriesAndCurrencyPlugin(Plugin):
             "2. 进行货币转换：输入【汇率 [金额] [源货币] 到 [目标货币]】\n\n"
             "示例：\n"
             "  - 【卡路里 土豆】将返回土豆的卡路里信息。\n"
-            "  - 【汇率 100 人民币 到 美元】将返回100人民币等于多少美元。\n\n"
+            "  - 【汇率 1000 人民币 到 美元】将返回1000人民币等于多少美元。\n\n"
             "支持的货币符号及名称：\n"
         )
         for code, name in supported_currencies.items():
